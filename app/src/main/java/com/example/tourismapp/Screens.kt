@@ -1,0 +1,7 @@
+package com.example.tourismapp
+
+sealed class Screens(val route:String){
+    data object  LoginScreen : Screens("login-screen")
+    data object  SignUpScreen : Screens("signup-screen")
+    data object HomePage:Screens("homepage")
+}
