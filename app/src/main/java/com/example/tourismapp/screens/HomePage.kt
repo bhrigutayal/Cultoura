@@ -31,9 +31,6 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -234,7 +231,7 @@ fun HomePage(
                         context as MainActivity,
                         android.Manifest.permission.ACCESS_FINE_LOCATION
                     ) || ActivityCompat.shouldShowRequestPermissionRationale(
-                        context as MainActivity,
+                        context,
                         android.Manifest.permission.ACCESS_COARSE_LOCATION
                     )
 

@@ -3,7 +3,6 @@ package com.example.tourismapp
 import com.example.tourismapp.utils.GeocodingApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 object RetrofitClient {
     private const val BASE_URL = "https://maps.googleapis.com/"

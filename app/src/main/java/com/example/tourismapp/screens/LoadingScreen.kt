@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,6 +46,7 @@ fun LoadingScreen(authViewModel: AuthViewModel,navController: NavController) {
         } else {
             // Proceed with your logic
             when(result){
+
                 is Success -> {
                     navController.navigate(Screens.HomePage.route)
                 }
@@ -55,8 +55,9 @@ fun LoadingScreen(authViewModel: AuthViewModel,navController: NavController) {
                     authViewModel.reset()
                     Toast.makeText(context,"Incorrect Id or Password",Toast.LENGTH_LONG).show()
                 }
+                else -> {}
 
-                null -> TODO()
+
             }
         }
     }

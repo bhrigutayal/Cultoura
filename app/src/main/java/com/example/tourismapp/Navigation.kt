@@ -11,11 +11,8 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.example.tourismapp.screens.HomePage
 import com.example.tourismapp.screens.LoadingScreen
-import com.example.tourismapp.screens.LocationPage
 import com.example.tourismapp.screens.LocationSelectionScreen
 import com.example.tourismapp.screens.LoginScreen
-import com.example.tourismapp.screens.ProfilePage
-import com.example.tourismapp.screens.SearchPage
 import com.example.tourismapp.screens.SignUpScreen
 import com.example.tourismapp.utils.LocationUtils
 import com.example.tourismapp.viewmodel.AuthViewModel
