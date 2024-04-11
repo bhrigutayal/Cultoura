@@ -54,7 +54,15 @@ android {
 dependencies {
     val compose_version = "1.6.0-alpha06"
     implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation ("com.google.maps.android:maps-compose:2.15.0")
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("androidx.navigation:navigation-compose:2.7.4")
     implementation("androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
@@ -62,6 +70,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.6.5")
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.5")
 
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation(libs.androidx.core.ktx)

@@ -1,6 +1,7 @@
 package com.example.tourismapp.screens
 
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,12 +17,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -39,6 +47,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.rememberAsyncImagePainter
 import com.example.tourismapp.Address
 import com.example.tourismapp.R
@@ -54,21 +64,27 @@ fun LoginScreen(
     onSignInSuccess:()->Unit
 ) {
     var email by remember { mutableStateOf("") }
-    var password by remember {
-        mutableStateOf("")
+    var password by remember {mutableStateOf("")
     }
+    var isVisible by remember{ mutableStateOf(false)}
+    val context= LocalContext.current
 
-    val result by authViewModel.authResult.observeAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp).background(color = Color.White),
+            .padding(16.dp)
+            .background(color = Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text(text = stringResource(R.string.app_name), fontWeight = FontWeight.Bold, color= Color.Black, fontSize = 45.sp)
-       Image(painter = rememberAsyncImagePainter(Address.path) , contentDescription = null,modifier = Modifier.size(200.dp).clip(
-           CircleShape).border(4.dp,Color.Yellow,CircleShape))
+        Image(painter = rememberAsyncImagePainter(Address.path) , contentDescription = null,modifier = Modifier
+            .size(200.dp)
+            .clip(
+                CircleShape
+            )
+            .border(4.dp, Color.Yellow, CircleShape))
         Text(text = "Festival of India", fontWeight = FontWeight.Light, color= Color.Gray)
 
         OutlinedTextField(
@@ -102,7 +118,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if(isVisible) VisualTransformation.None else PasswordVisualTransformation(),
             colors = OutlinedTextFieldDefaults.colors(
                 cursorColor = colorResource(id = R.color.black),
                 // using predefined Color
@@ -115,27 +131,16 @@ fun LoginScreen(
                 unfocusedBorderColor = colorResource(id = R.color.black),
                 focusedLabelColor = colorResource(id = R.color.black),
                 unfocusedLabelColor = colorResource(id = R.color.black),
-            )
+            ),
+            trailingIcon = { IconButton(onClick = { isVisible = (!isVisible) }) {
+                Icon(imageVector = if(isVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff , contentDescription = null)
+            }}
 
         )
         Button(
             onClick = {
-
-              authViewModel.login(email, password)
-                when (result) {
-                    is Result.Success->{
-                        onSignInSuccess()
-                    }
-                    is Result.Error ->{
-
-                    }
-
-                    else -> {
-
-                    }
-                }
-
-
+                authViewModel.login(email, password)
+                onSignInSuccess()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -147,11 +152,14 @@ fun LoginScreen(
         Text("Forgot Password?", modifier = Modifier.clickable {  }, textDecoration = TextDecoration.Underline)
         Spacer(modifier = Modifier.height(16.dp))
         Text("Don't have an account? Sign up.",
-           modifier = Modifier.clickable { onNavigateToSignUp() }
+            modifier = Modifier.clickable { onNavigateToSignUp() }
         )
     }
 }
-
-
-
-
+//@Preview(showBackground = true)
+//@Composable
+//fun Preview(){
+//    LoginScreen(onNavigateToSignUp = { /*TODO*/ }) {
+//
+//    }
+//}

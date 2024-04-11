@@ -7,8 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.example.tourismapp.Injection
-import com.example.tourismapp.data.UserRepository
+import com.example.tourismapp.data.*
 import kotlinx.coroutines.launch
+
 
 class AuthViewModel : ViewModel() {
     private val userRepository: UserRepository
@@ -20,15 +21,17 @@ class AuthViewModel : ViewModel() {
         )
     }
 
-    private val _authResult = MutableLiveData<
-            com.example.tourismapp.data.Result<Boolean>>()
-    val authResult: LiveData<
-            com.example.tourismapp.data.Result<Boolean>> get() = _authResult
+    private val _authResult = MutableLiveData<Result<Boolean>?>()
+    val authResult: LiveData<Result<Boolean>?> get() = _authResult
+
 
     fun signUp(email: String, password: String, firstName: String, lastName: String) {
         viewModelScope.launch {
             _authResult.value = userRepository.signUp(email, password, firstName, lastName)
         }
+    }
+    fun reset(){
+        _authResult.value = null
     }
 
     fun login(email: String, password: String) {
@@ -36,4 +39,5 @@ class AuthViewModel : ViewModel() {
             _authResult.value = userRepository.login(email, password)
         }
     }
+
 }

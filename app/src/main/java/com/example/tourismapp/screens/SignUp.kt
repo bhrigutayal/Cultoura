@@ -54,7 +54,7 @@ fun SignUpScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-       Text(text = "Welcome to ${stringResource(R.string.app_name)}", fontWeight = FontWeight.Bold, color= Color.Black)
+        Text(text = "Welcome to ${stringResource(R.string.app_name)}", fontWeight = FontWeight.Bold, color= Color.Black)
         Text("Make your journey memorable", color = colorResource(id = R.color.text_field), fontWeight = FontWeight.Bold)
 
         Spacer(modifier = Modifier.height(25.dp))
@@ -161,7 +161,7 @@ fun SignUpScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                , colors = ButtonDefaults.buttonColors(Color.Green)
+            , colors = ButtonDefaults.buttonColors(Color.Green)
         ) {
             Text("Register", color = Color.White, fontWeight = FontWeight.Bold)
         }
