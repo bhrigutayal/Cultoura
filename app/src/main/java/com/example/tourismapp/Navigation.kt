@@ -61,7 +61,7 @@ fun NavigationGraph(
                 LocationSelectionScreen(location = it1, onLocationSelected = {locationdata->
                     locationViewModel.fetchAddress("${locationdata.latitude},${locationdata.longitude}")
                     navController.popBackStack()
-                }, GoBack = {navController.popBackStack()})
+                }, goBack = {navController.popBackStack()})
             }
         }
         dialog(Screens.Loading.route){
