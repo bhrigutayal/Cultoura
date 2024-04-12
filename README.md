@@ -40,7 +40,7 @@ CULTOURA is your all-in-one tourism app designed to enhance your travel experien
 
 ## Getting Started
 
-To get started with CULTOURA, simply download the app from the App Store or Google Play Store and create your profile. Explore the vast array of cultural events, customize your preferences, and start planning your next adventure today!
+To get started with CULTOURA, simply clone the repository and get started. Explore the vast array of cultural events, customize your preferences, and start planning your next adventure today!
 
 ## Feedback
 
