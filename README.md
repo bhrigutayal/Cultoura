@@ -43,14 +43,12 @@ CULTOURA is your all-in-one tourism app designed to enhance your travel experien
 
 To get started with CULTOURA, simply clone the repository and get started. Explore the vast array of cultural events, customize your preferences, and start planning your next adventure today!
 
-## Feedback
 
-We're constantly working to improve your experience with CULTOURA. If you have any feedback, suggestions, or questions, please don't hesitate to contact us at [feedback@cultoura.com](mailto:feedback@cultoura.com).
 
 ## Connect with Us
 
 Stay updated on the latest cultural events and news by following us on social media:
-- Twitter: [@CULTOURA_app](https://twitter.com/CULTOURA_app)
-- Facebook: [CULTOURA](https://www.facebook.com/CULTOURA)
+-Gmail: bhrigutayal7@gmail.com
+      : kartishsbhadauria@gmail.com
 
 Happy exploring with CULTOURA! 🌍🎭🎨🎶
