@@ -35,6 +35,7 @@ CULTOURA is your all-in-one tourism app designed to enhance your travel experien
 
 ![img2](https://github.com/bhrigutayal/TourismApp/assets/123312515/0665758c-6c2a-45ec-a508-2fcd58873f8b)
 
+![WhatsApp Image 2024-04-12 at 15 44 12](https://github.com/bhrigutayal/TourismApp/assets/118829367/038f4864-e2e2-4839-a4f9-fc9474c5343d)
 
 
 
