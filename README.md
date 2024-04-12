@@ -29,12 +29,9 @@ CULTOURA is your all-in-one tourism app designed to enhance your travel experien
 
 ## Screenshots
 
-![Screenshot 1](![LOGO fin-3](https://github.com/bhrigutayal/TourismApp/assets/123312515/ba5fec00-0c07-4258-a4b4-fe8b2d60c84c)
-)
-![Screenshot 2](![img1](https://github.com/bhrigutayal/TourismApp/assets/123312515/deecd104-9865-4e62-8410-0ff221bbc4d7)
-)
-![Screenshot 3](![img2](https://github.com/bhrigutayal/TourismApp/assets/123312515/539628df-ba83-4230-888a-006e481866ad)
-)
+![Screenshot 1](![LOGO fin-3](https://github.com/bhrigutayal/TourismApp/assets/123312515/ba5fec00-0c07-4258-a4b4-fe8b2d60c84c))
+![Screenshot 2](![img1](https://github.com/bhrigutayal/TourismApp/assets/123312515/deecd104-9865-4e62-8410-0ff221bbc4d7))
+![Screenshot 3](![img2](https://github.com/bhrigutayal/TourismApp/assets/123312515/539628df-ba83-4230-888a-006e481866ad))
 
 
 ## Getting Started
