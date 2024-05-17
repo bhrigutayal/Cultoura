@@ -89,11 +89,11 @@ fun HomeView(paddingValues: PaddingValues, homeViewModel: HomeViewModel){
             // This list has to be updated with real data
             val states = mutableListOf<States>()
             states.add(States("Maharashtra", Address.path))
-            states.add(States("Gujarat", Address.path, Color.Red))
-            states.add(States("Uttar Pradesh", Address.path, Color.Cyan))
-            states.add(States("Haryana", Address.path, Color.Magenta))
-            states.add(States("Delhi", Address.path, Color.Gray))
-            states.add(States("Uttarakhand", Address.path, Color.Green))
+            states.add(States("Gujarat", "https://firebasestorage.googleapis.com/v0/b/tourism-3aef0.appspot.com/o/images%2Fimages%20(3).jpg?alt=media&token=3d5903ab-bd05-4e3c-8b7b-dc68568ceb48", Color.Red))
+            states.add(States("Uttar Pradesh", "https://firebasestorage.googleapis.com/v0/b/tourism-3aef0.appspot.com/o/images%2Fimages%20(4).jpg?alt=media&token=fbdba079-cf27-4524-bf3a-8f97b74d8dc8", Color.Cyan))
+            states.add(States("Haryana", "https://firebasestorage.googleapis.com/v0/b/tourism-3aef0.appspot.com/o/images%2Fimages%20(2).jpg?alt=media&token=c8142c7a-945f-47b5-be53-659080932261", Color.Magenta))
+            states.add(States("Delhi", "https://firebasestorage.googleapis.com/v0/b/tourism-3aef0.appspot.com/o/images%2Fimages%20(1).jpg?alt=media&token=d7d4c7f0-dbe7-4855-9cef-7aa3ba0321fc", Color.Gray))
+            states.add(States("Uttarakhand", "https://firebasestorage.googleapis.com/v0/b/tourism-3aef0.appspot.com/o/images%2Fimages.jpg?alt=media&token=c88298e1-5754-4f64-9ca8-e2131aad8ee8", Color.Green))
             items(states){
                     state->
                 StateRowItem(state = state, homeViewModel = homeViewModel)

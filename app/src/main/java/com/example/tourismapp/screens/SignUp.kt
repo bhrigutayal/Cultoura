@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -45,6 +46,7 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
+    var isPassOkay by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -90,19 +92,24 @@ fun SignUpScreen(
                 .padding(8.dp),
             visualTransformation = PasswordVisualTransformation(),
             colors = OutlinedTextFieldDefaults.colors(
-                cursorColor = colorResource(id = R.color.black),
+                cursorColor = if(isPassOkay) {colorResource(id = R.color.black)} else  {Color.Red},
                 // using predefined Color
-                focusedTextColor = Color.Black,
-                unfocusedTextColor= Color.Black,
+                focusedTextColor = if(isPassOkay) {Color.Black} else  {Color.Red},
+                unfocusedTextColor= if(isPassOkay) {Color.Black} else  {Color.Red},
                 // using our own colors in Res.Values.Color
-                unfocusedContainerColor = colorResource(id = R.color.text_field),
-                focusedContainerColor = colorResource(id = R.color.text_field),
-                focusedBorderColor = colorResource(id = R.color.black),
-                unfocusedBorderColor = colorResource(id = R.color.black),
-                focusedLabelColor = colorResource(id = R.color.black),
-                unfocusedLabelColor = colorResource(id = R.color.black),
+                unfocusedContainerColor = if(isPassOkay) {colorResource(id = R.color.text_field)} else  {Color.Red},
+                focusedContainerColor = if(isPassOkay) {colorResource(id = R.color.text_field)} else  {Color.Red},
+                focusedBorderColor = if(isPassOkay) {colorResource(id = R.color.black)} else  {Color.Red},
+                unfocusedBorderColor = if(isPassOkay) {colorResource(id = R.color.black)} else  {Color.Red},
+                focusedLabelColor = if(isPassOkay) {colorResource(id = R.color.black)} else  {Color.Red},
+                unfocusedLabelColor = if(isPassOkay) {colorResource(id = R.color.black)} else  {Color.Red},
             )
+
         )
+        if(!isPassOkay){
+            Text("Password Must be at least 6 characters", color = Color.Red, fontFamily = FontFamily.SansSerif
+            )
+        }
         OutlinedTextField(
             value = firstName,
             onValueChange = { firstName = it },
@@ -150,13 +157,19 @@ fun SignUpScreen(
 
         )
         Button(
+
             onClick = {
-                authViewModel.signUp(email, password, firstName, lastName)
-                email = ""
-                password = ""
-                firstName = ""
-                lastName = ""
-                onNavigateToLogin()
+                if(checkPass(password)) {
+                    isPassOkay = true
+                    authViewModel.signUp(email, password, firstName, lastName)
+                    email = ""
+                    password = ""
+                    firstName = ""
+                    lastName = ""
+                    onNavigateToLogin()
+                }else{
+                    isPassOkay = false
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -171,4 +184,10 @@ fun SignUpScreen(
         )
     }
 
+}
+fun checkPass(pass:String):Boolean{
+    if(pass.length <6){
+        return false
+    }
+    return true
 }

@@ -31,7 +31,9 @@ class UserRepository(private val auth: FirebaseAuth,
     private suspend fun saveUserToFirestore(user: User) {
         firestore.collection("users").document(user.email).set(user).await()
     }
-
+     fun signOut(){
+        auth.signOut()
+    }
     suspend fun getCurrentUser(): Result<User> = try {
         val uid = auth.currentUser?.email
         if (uid != null) {

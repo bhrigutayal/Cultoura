@@ -63,11 +63,43 @@ class LocationUtils(val context: Context) {
         val coordinate = LatLng(location.latitude, location.longitude)
         val addresses:MutableList<Address>? =
             geocoder.getFromLocation(coordinate.latitude, coordinate.longitude, 1)
+
         return if(addresses?.isNotEmpty() == true){
             addresses[0].getAddressLine(0)
         }else{
             "Address not found"
         }
+    }
+    fun GeocodeLocation(location: String, max:Int) : MutableList<String>{
+        val geocoder = Geocoder(context, Locale.getDefault())
+       // val coordinate = LatLng(location.latitude, location.longitude)
+        val list = mutableListOf<String>()
+        val addresses:MutableList<Address>? =
+            geocoder.getFromLocationName(location,max)
+
+
+        return if(addresses?.isNotEmpty() == true){
+           for( address  in addresses){
+               list.add(address.getAddressLine(0))
+           }
+            list
+        }else{
+            list
+        }
+
+    }
+    fun GetAddress(location: String) : LatLng{
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses: MutableList<Address>? = geocoder.getFromLocationName(location, 1)
+        return if(addresses?.isNotEmpty() == true){
+            val address: Address = addresses[0]
+            val lat: Double = address.latitude
+            val lng: Double = address.longitude
+            LatLng(lat,lng)
+        }else{
+            LatLng(0.0,0.0)
+        }
+
     }
 
 }

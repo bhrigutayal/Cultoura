@@ -6,4 +6,6 @@ sealed class Screens(val route:String){
     data object HomePage:Screens("homepage")
     data object LocationScreen: Screens("location screen")
     data object Loading: Screens("Loading")
+
+    data object onBoarding:Screens("OnBoarding")
 }

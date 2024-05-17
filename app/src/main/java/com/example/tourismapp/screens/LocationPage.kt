@@ -11,10 +11,12 @@ import androidx.compose.ui.Modifier
 fun LocationPage(paddingValues: PaddingValues, state: String?){
         if(state == null){
                 // Discover Page
+                DiscoverPage(paddingValues = paddingValues)
         }
         else{
                 //Design According To State (Will use Switch case for selecting page of a state)
-                Text("$state")
+                DiscoverPage(state,paddingValues)
+
         }
         LazyColumn(
                 modifier = Modifier.padding(paddingValues)

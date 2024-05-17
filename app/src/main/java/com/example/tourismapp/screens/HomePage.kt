@@ -1,10 +1,12 @@
 package com.example.tourismapp.screens
 
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -56,18 +58,20 @@ import com.example.tourismapp.Screens
 import com.example.tourismapp.data.*
 import com.example.tourismapp.utils.LocationUtils
 import com.example.tourismapp.viewmodel.HomeViewModel
+import com.example.tourismapp.viewmodel.ItineraryViewModel
 import com.example.tourismapp.viewmodel.LocationViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomePage(
     homeViewModel: HomeViewModel,
     locationUtils: LocationUtils,
     viewModel: LocationViewModel,
     navController: NavController,
-    context: Context
+    itineraryViewModel: ItineraryViewModel
 ){
 
 
@@ -131,8 +135,6 @@ fun HomePage(
         bottomBar = {
             androidx.compose.material3.BottomAppBar(
                 containerColor =  colorResource(id = R.color.text_field),
-
-
                 ) {
                 Row(modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Absolute.SpaceBetween) {
@@ -218,53 +220,13 @@ fun HomePage(
         scaffoldState = scaffoldState
     )
     {
-        val requestPermissionLauncher = rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestMultiplePermissions() ,
-            onResult = { permissions ->
-                if(permissions[android.Manifest.permission.ACCESS_COARSE_LOCATION] == true
-                    && permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] == true){
-                    // I HAVE ACCESS to location
 
-                    locationUtils.requestLocationUpdates(viewModel = viewModel)
-                }else{
-                    val rationaleRequired = ActivityCompat.shouldShowRequestPermissionRationale(
-                        context as MainActivity,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
-                    ) || ActivityCompat.shouldShowRequestPermissionRationale(
-                        context,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-
-                    if(rationaleRequired){
-                        Toast.makeText(context,
-                            "Location Permission is required for this feature to work", Toast.LENGTH_LONG)
-                            .show()
-                    }else{
-                        Toast.makeText(context,
-                            "Location Permission is required. Please enable it in the Android Settings",
-                            Toast.LENGTH_LONG)
-                            .show()
-                    }
-                }
-            })
         when(selected){
             "Home"-> HomeView(it,homeViewModel)
             "Search"-> SearchPage(it)
             "Location"-> LocationPage(it, state)
-            "Profile" ->ProfilePage(it,homeViewModel.user.value)
-            "Itinerary" ->  {
-                if(locationUtils.hasLocationPermission(context)){
-                    locationUtils.requestLocationUpdates(viewModel)
-                    navController.navigate(Screens.LocationScreen.route){
-                        this.launchSingleTop
-                    }
-                }else{
-                    requestPermissionLauncher.launch(arrayOf(
-                        android.Manifest.permission.ACCESS_FINE_LOCATION,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION
-                    ))
-                }
-            }
+            "Profile" ->ProfilePage(it, homeViewModel = homeViewModel,navController = navController)
+            "Itinerary" -> Itinerary(locationUtils = locationUtils, viewModel = viewModel, navController = navController, it, homeViewModel,itineraryViewModel)
             }
         }
 
@@ -277,9 +239,10 @@ fun StateRowItem(state:States, homeViewModel: HomeViewModel){
     Column(
         modifier= Modifier
             .size(150.dp)
-            .clickable {homeViewModel.Navigate("Location")
-                       homeViewModel.setState(state.name)
-                       },
+            .clickable {
+                homeViewModel.Navigate("Location")
+                homeViewModel.setState(state.name)
+            },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(painter = rememberAsyncImagePainter(state.image) , contentDescription = null,modifier = Modifier
@@ -293,24 +256,25 @@ fun StateRowItem(state:States, homeViewModel: HomeViewModel){
 }
 
 @Composable
-fun ListItems(heading:String){
+fun ListItems(heading:String, list: MutableList<Images> = mutableListOf()){
 
     Column{
         Text(text = heading, color = Color.Black,fontWeight = FontWeight.Bold, fontStyle = FontStyle.Normal, fontFamily = FontFamily.SansSerif, fontSize = 25.sp)
         // This list has to be updated with real data
-        val images = mutableListOf<Images>()
-        images.add(Images())
-        images.add(Images())
-        images.add(Images())
-        images.add(Images())
-        images.add(Images())
+        if(list.size == 0) {
+            list.add(Images())
+            list.add(Images("https://firebasestorage.googleapis.com/v0/b/tourism-3aef0.appspot.com/o/images%2Fimages.jpg?alt=media&token=c88298e1-5754-4f64-9ca8-e2131aad8ee8"))
+            list.add(Images("https://firebasestorage.googleapis.com/v0/b/tourism-3aef0.appspot.com/o/images%2Fimages%20(1).jpg?alt=media&token=d7d4c7f0-dbe7-4855-9cef-7aa3ba0321fc"))
+            list.add(Images("https://firebasestorage.googleapis.com/v0/b/tourism-3aef0.appspot.com/o/images%2Fimages%20(2).jpg?alt=media&token=c8142c7a-945f-47b5-be53-659080932261"))
+            list.add(Images("https://firebasestorage.googleapis.com/v0/b/tourism-3aef0.appspot.com/o/images%2Fimages%20(3).jpg?alt=media&token=3d5903ab-bd05-4e3c-8b7b-dc68568ceb48"))
+        }
 
         LazyRow( modifier = Modifier
             .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
-            items(images){
+            items(list){
                    image->
                 ImagesWidget(image = image)
 

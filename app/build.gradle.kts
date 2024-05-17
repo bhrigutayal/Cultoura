@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
+    id("kotlin-kapt")
+    id("kotlin-parcelize")
 
 }
 
@@ -53,10 +55,15 @@ android {
 
 dependencies {
     val compose_version = "1.6.0-alpha06"
+    val room = "2.6.0"
     implementation ("io.coil-kt:coil-compose:2.4.0")
     implementation ("com.google.maps.android:maps-compose:2.15.0")
     implementation ("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    implementation("androidx.room:room-runtime:$room")
+    implementation("androidx.room:room-ktx:$room")
+    kapt("androidx.room:room-compiler:$room")
 
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
@@ -66,12 +73,10 @@ dependencies {
     implementation("androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
-
     implementation("androidx.compose.runtime:runtime-livedata:1.6.5")
-    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation ("androidx.compose.material:material-icons-extended:1.6.5")
-
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

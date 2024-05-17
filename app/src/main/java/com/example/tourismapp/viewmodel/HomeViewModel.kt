@@ -1,6 +1,8 @@
 package com.example.tourismapp.viewmodel
 
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -15,9 +17,11 @@ import com.google.firebase.auth.FirebaseAuth
 class HomeViewModel : ViewModel() {
     private val userRepository: UserRepository
     private val _user = MutableLiveData<User>()
+
     val user : LiveData<User> get() = _user
     val selected = MutableLiveData<String>()
     val state = MutableLiveData<String>()
+    val showCalendar : MutableState<Boolean> = mutableStateOf(false)
 init{
     userRepository = UserRepository(
         FirebaseAuth.getInstance(),
@@ -37,6 +41,9 @@ init{
 
             }
         }
+    }
+     fun signOut(){
+        userRepository.signOut()
     }
     fun Navigate(value:String){
         selected.value = value
