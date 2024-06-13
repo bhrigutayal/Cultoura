@@ -45,10 +45,11 @@ To get started with CULTOURA, simply clone the repository and get started. Explo
 
 
 
-## Connect with Us
+## Connect with Us via Email
 
 Stay updated on the latest cultural events and news by following us on social media:
 -Gmail: bhrigutayal7@gmail.com
       : kartishsbhadauria@gmail.com
+      : lakshaypahal20@gmail.com
 
 Happy exploring with CULTOURA! 🌍🎭🎨🎶
