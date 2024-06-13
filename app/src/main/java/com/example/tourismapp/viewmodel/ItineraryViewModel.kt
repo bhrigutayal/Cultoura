@@ -23,10 +23,11 @@ class ItineraryViewModel : ViewModel (){
             try{
                 val response = DataService.getCategories()
                 _categoriesState.value = _categoriesState.value.copy(
-                    list= response.items,
+                    list= response.categories,
                     loading = false,
                     error = null
                 )
+
             }catch (e: Exception){
                 _categoriesState.value= _categoriesState.value.copy(
                     loading = false,

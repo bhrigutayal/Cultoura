@@ -1,9 +1,10 @@
 package com.example.tourismapp.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 
-
-
+@Parcelize
 data class ItenaryItem(
     val date:String,
     val event:String,
@@ -16,6 +17,6 @@ data class ItenaryItem(
     val Price:String,
     val image: String = ""
 
-)
+): Parcelable
 
-data class ItemsResponse(val items: List<ItenaryItem>)
+data class ItemsResponse(val categories: List<ItenaryItem>)
