@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name= "text_field">#4ADEDE</color>
+    <!-- Primary brand colors -->
+    <color name="primary">#000000</color>
+    <color name="primaryDark">#000000</color>
+    <color name="accent">#FF4081</color>
 
+    <!-- Basic colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Shades of gray -->
+    <color name="grey">#9E9E9E</color>
+    <color name="lightGrey">#E0E0E0</color>
+    <color name="darkGrey">#616161</color>
+
+    <!-- Background colors -->
+    <color name="backgroundColor">#F5F5F5</color>
+    <color name="cardBackground">#FFFFFF</color>
+
+    <!-- Text colors -->
+    <color name="textPrimary">#212121</color>
+    <color name="textSecondary">#757575</color>
+    <color name="textHint">#BDBDBD</color>
+
+    <!-- Status colors -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FFC107</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
+    <color name="selected_background">#E1F5FE</color>
+    <color name="selected_border">#2196F3</color>
+    <color name="dayHeaderBackground">#F0F0F0</color>
+
+
+    <color name="button_text_color">#FFFFFF</color>
+    <color name="text_light_black">#30384B</color>
+    <color name="text_color">#8A9191</color>
+    <color name="background_light">#F5F5F5</color>
+    <color name="divider">#40ADD8E6</color>
 </resources>

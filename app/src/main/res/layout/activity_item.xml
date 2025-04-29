@@ -1,0 +1,146 @@
+
+    <!-- Brunch Activity Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/activityContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/activityImage"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        tools:contentDescription="Brunch at The Rustic"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:src="@tools:sample/backgrounds/scenic"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/activityTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        tools:text="Brunch at The Rustic"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activityImage" />
+
+    <TextView
+        android:id="@+id/activityDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        tools:text="Start your day with a delicious brunch at this popular spot known for farm-to-table cuisine."
+        android:textColor="#666666"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activityTitle" />
+
+    <ImageView
+        android:id="@+id/brunchPriceIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/price"
+        android:src="@drawable/ic_ruppee"
+        app:layout_constraintBottom_toTopOf="@id/selectActivityButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activityDescription" />
+
+    <TextView
+        android:id="@+id/brunchPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        tools:text="$35"
+        android:textColor="#666666"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/brunchPriceIcon"
+        app:layout_constraintStart_toEndOf="@id/brunchPriceIcon"
+        app:layout_constraintTop_toTopOf="@id/brunchPriceIcon" />
+
+    <ImageView
+        android:id="@+id/brunchTimeIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/duration"
+        android:src="@drawable/ic_clock"
+        app:layout_constraintBottom_toBottomOf="@id/brunchPriceIcon"
+        app:layout_constraintStart_toEndOf="@id/brunchPrice"
+        app:layout_constraintTop_toTopOf="@id/brunchPriceIcon" />
+
+    <TextView
+        android:id="@+id/brunchTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        tools:text="1.5 hours"
+        android:textColor="#666666"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/brunchTimeIcon"
+        app:layout_constraintStart_toEndOf="@id/brunchTimeIcon"
+        app:layout_constraintTop_toTopOf="@id/brunchTimeIcon" />
+
+    <ImageView
+        android:id="@+id/brunchLocationIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/location"
+        android:src="@drawable/ic_location"
+        app:layout_constraintBottom_toBottomOf="@id/brunchTimeIcon"
+        app:layout_constraintStart_toEndOf="@id/brunchTime"
+        app:layout_constraintTop_toTopOf="@id/brunchTimeIcon" />
+
+    <TextView
+        android:id="@+id/brunchLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        tools:text="Downtown"
+        android:textColor="#666666"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/brunchLocationIcon"
+        app:layout_constraintStart_toEndOf="@id/brunchLocationIcon"
+        app:layout_constraintTop_toTopOf="@id/brunchLocationIcon" />
+
+    <Button
+        android:id="@+id/selectActivityButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/select_activity"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/brunchPriceIcon" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
+            
