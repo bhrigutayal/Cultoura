@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tourismclient.cultoura.R
 import com.tourismclient.cultoura.databinding.ItemItineraryBinding
 import com.tourismclient.cultoura.models.Itinerary
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class ItineraryAdapter(
     private val onItemClick: (Itinerary) -> Unit,
@@ -73,6 +76,18 @@ class ItineraryAdapter(
             }
         }
 
+        private fun parseTimeToMillis(timeString: String): Long {
+            return try {
+                val format = SimpleDateFormat("h:mm a", Locale.getDefault())
+                val date = format.parse(timeString)
+                val calendar = Calendar.getInstance().apply {
+                    if (date != null) time = date
+                }
+                calendar.timeInMillis
+            } catch (e: Exception) {
+                System.currentTimeMillis()
+            }
+        }
         private fun setupItineraryDays(itinerary: Itinerary) {
             binding.itineraryDaysContainer.removeAllViews()
 
@@ -94,8 +109,10 @@ class ItineraryAdapter(
                     val tvTime = activityView.findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.tv_time)
                     val tvActivity = activityView.findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.tv_activity)
                     val tvLocation = activityView.findViewById<androidx.appcompat.widget.AppCompatTextView>(R.id.tv_location)
-
-                    tvTime.text = activity.duration.toString()
+                    val startTimeMillis = parseTimeToMillis(activity.startHour)
+                    val endTimeMillis = parseTimeToMillis(activity.endHour)
+                    val totalDurationMillis = endTimeMillis - startTimeMillis
+                    tvTime.text = totalDurationMillis.toString()
                     tvActivity.text = activity.title
                     //tvLocation.text = activity.location.toString()
 

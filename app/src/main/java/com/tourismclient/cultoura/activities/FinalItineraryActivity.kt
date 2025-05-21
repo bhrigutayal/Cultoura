@@ -13,17 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tourismclient.cultoura.R
 import com.tourismclient.cultoura.adapters.ItineraryAdapter
-import com.tourismclient.cultoura.models.ActivityItem
-import com.tourismclient.cultoura.models.ActivityType
-import com.tourismclient.cultoura.models.DayPlan
-import com.tourismclient.cultoura.models.Itinerary
-import com.tourismclient.cultoura.models.ItineraryItem
-import com.tourismclient.cultoura.models.Location
+import com.tourismclient.cultoura.models.*
 import com.tourismclient.cultoura.utils.Constants
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class FinalItineraryActivity : AppCompatActivity() {
 
@@ -60,71 +53,49 @@ class FinalItineraryActivity : AppCompatActivity() {
         downloadButton = findViewById(R.id.downloadButton)
         editButton = findViewById(R.id.editButton)
 
-        // Setup RecyclerView
         itineraryRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     private fun setupData() {
-        // Get data from intent
         val displayDate = intent.getStringExtra(Constants.DATE) ?: "Not specified"
         val displayStartTime = intent.getStringExtra(Constants.START_TIME) ?: "9:00 AM"
         val displayEndTime = intent.getStringExtra(Constants.END_TIME) ?: "6:00 PM"
-        val budget = intent.getIntExtra(Constants.BUDGET,150)
+        val budget = intent.getIntExtra(Constants.BUDGET, 150)
 
-        // Set data to views
         dateTextView.text = displayDate
         timeTextView.text = "$displayStartTime - $displayEndTime"
-        costTextView.text = "$${budget}"
+        costTextView.text = "$$budget"
 
-        // Generate itinerary items based on the inputs
         generateItineraryItems(displayStartTime, displayEndTime, budget)
-
-        // Convert to Itinerary object
         convertToItineraryObject(displayDate, displayStartTime, displayEndTime, budget)
     }
 
     private fun setupAdapter() {
-        // Define the three callbacks needed for the adapter
-
-        // 1. When an itinerary item is clicked
         val onItemClick: (Itinerary) -> Unit = { itinerary ->
-            // Handle item click
             Toast.makeText(this, "Viewing details for: ${itinerary.title}", Toast.LENGTH_SHORT).show()
-
-            // You might want to navigate to a detail activity
-            // val intent = Intent(this, ItineraryDetailActivity::class.java)
-            // intent.putExtra("itinerary_id", itinerary.id)
-            // startActivity(intent)
         }
 
-        // 2. When the share button is clicked
-        val onShareClick: (Itinerary, View) -> Unit = { itinerary, view ->
-            // Create a share intent
+        val onShareClick: (Itinerary, View) -> Unit = { itinerary, _ ->
             val shareIntent = Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT,
+                putExtra(
+                    Intent.EXTRA_TEXT,
                     "Check out my itinerary: ${itinerary.title} in ${itinerary.destination}\n" +
                             "From ${SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(itinerary.startDate)} " +
-                            "to ${SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(itinerary.endDate)}")
+                            "to ${SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(itinerary.endDate)}"
+                )
                 type = "text/plain"
             }
             startActivity(Intent.createChooser(shareIntent, "Share Itinerary"))
         }
 
-        // 3. When the delete button is clicked
         val onDeleteClick: (Itinerary) -> Unit = { itinerary ->
-            // Show confirmation dialog before deleting
             AlertDialog.Builder(this)
                 .setTitle("Delete Itinerary")
                 .setMessage("Are you sure you want to delete ${itinerary.title}?")
                 .setPositiveButton("Delete") { dialog, _ ->
-                    // Delete the itinerary
-                    // In a real app, you would delete from database
-                    // For now, just show a toast
                     Toast.makeText(this, "Itinerary deleted", Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
-
-                    // Return to previous screen
                     finish()
                 }
                 .setNegativeButton("Cancel") { dialog, _ ->
@@ -133,39 +104,30 @@ class FinalItineraryActivity : AppCompatActivity() {
                 .show()
         }
 
-        // Initialize the adapter with the callbacks
         itineraryAdapter = ItineraryAdapter(onItemClick, onShareClick, onDeleteClick)
-
-        // Set the adapter to the RecyclerView
         itineraryRecyclerView.adapter = itineraryAdapter
 
-        // Submit the current itinerary
         currentItinerary?.let {
             itineraryAdapter.submitList(listOf(it))
         }
     }
 
     private fun generateItineraryItems(startTime: String, endTime: String, budget: Int) {
-        // This is your existing method to generate ItineraryItem objects
-        // (Keep the existing implementation for backward compatibility)
         itineraryItems.clear()
 
-        // Parse times to calculate duration
         val startTimeMillis = parseTimeToMillis(startTime)
         val endTimeMillis = parseTimeToMillis(endTime)
-
-        // Calculate total hours available
         val totalDurationMillis = endTimeMillis - startTimeMillis
         val totalHours = totalDurationMillis / (60 * 60 * 1000)
 
-        // Create activities based on budget and duration
         var currentTimeMillis = startTimeMillis
         var remainingBudget = budget
 
         val activities = generateActivitiesByBudget(budget, totalHours.toInt())
 
         for (activity in activities) {
-            val activityDurationMillis = activity.duration * 60 * 60 * 1000
+            val activityDuration = 2 // Assume 2 hours for demo
+            val activityDurationMillis = activityDuration * 60 * 60 * 1000
             val endActivityTimeMillis = currentTimeMillis + activityDurationMillis
 
             itineraryItems.add(
@@ -175,42 +137,43 @@ class FinalItineraryActivity : AppCompatActivity() {
                     description = activity.description,
                     imageUrl = activity.imageUrl,
                     sectionId = 2,
-                    duration = activity.duration,
+                    startHour = "",
+                    endHour = "",
+                    city = "",
+                    date = "",
+                    type = "",
                     cost = activity.cost,
                     rating = 5f,
-                    location = Location(
-                        latitude = 0.0, longitude = 0.3),
+                    location = ""
                 )
             )
 
             currentTimeMillis = endActivityTimeMillis
             remainingBudget -= activity.cost.toInt()
 
-            // Add travel time between activities
             if (activity != activities.last()) {
-                currentTimeMillis += 30 * 60 * 1000 // 30 minutes travel time
+                currentTimeMillis += 30 * 60 * 1000 // 30 minutes travel
             }
 
-            // Stop if we exceed the end time
             if (currentTimeMillis > endTimeMillis) break
         }
     }
 
-    private fun convertToItineraryObject(displayDate: String, startTime: String, endTime: String, budget: Int) {
-        // Parse the date
+    private fun convertToItineraryObject(
+        displayDate: String,
+        startTime: String,
+        endTime: String,
+        budget: Int
+    ) {
         val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
         val startDate = try {
             dateFormat.parse(displayDate) ?: Date()
         } catch (e: Exception) {
-            Date() // Fallback to current date if parsing fails
+            Date()
         }
 
-        // Create end date (same as start date for a day itinerary)
         val endDate = startDate
 
-        // Convert itineraryItems to Activity objects
-
-        // Create a day plan
         val dayPlan = DayPlan(
             dayNumber = 1,
             date = startDate,
@@ -218,7 +181,6 @@ class FinalItineraryActivity : AppCompatActivity() {
             title = "Day 1 in ${determineDestination()}"
         )
 
-        // Create the itinerary
         currentItinerary = Itinerary(
             title = "Custom Itinerary for $displayDate",
             destination = determineDestination(),
@@ -231,168 +193,52 @@ class FinalItineraryActivity : AppCompatActivity() {
         )
     }
 
-    // Helper method to determine activity type based on title (simplified)
     private fun determineActivityType(title: String): ActivityType {
         return when {
-            title.contains("Coffee") || title.contains("Lunch") ||
-                    title.contains("Dinner") || title.contains("Food") -> ActivityType.RESTAURANT
-            title.contains("Museum") || title.contains("Historical") ||
-                    title.contains("Tour") || title.contains("Boat") -> ActivityType.ATTRACTION
-            title.contains("Shopping") || title.contains("Market") -> ActivityType.SHOPPING
+            title.contains("Coffee", true) || title.contains("Lunch", true) ||
+                    title.contains("Dinner", true) || title.contains("Food", true) -> ActivityType.RESTAURANT
+            title.contains("Museum", true) || title.contains("Historical", true) ||
+                    title.contains("Tour", true) || title.contains("Boat", true) -> ActivityType.ATTRACTION
+            title.contains("Shopping", true) || title.contains("Market", true) -> ActivityType.SHOPPING
             else -> ActivityType.OTHER
         }
     }
 
-    // Helper method to determine destination (could be improved with real data)
     private fun determineDestination(): String {
-        return "Local City" // Replace with actual destination if available
+        return "Local City"
     }
 
-    // Existing helper methods
     private fun parseTimeToMillis(timeString: String): Long {
-        try {
+        return try {
             val format = SimpleDateFormat("h:mm a", Locale.getDefault())
             val date = format.parse(timeString)
-            val calendar = Calendar.getInstance()
-
-            date?.let {
-                calendar.time = it
-                // Set to today's date
-                val today = Calendar.getInstance()
-                calendar.set(Calendar.YEAR, today.get(Calendar.YEAR))
-                calendar.set(Calendar.MONTH, today.get(Calendar.MONTH))
-                calendar.set(Calendar.DAY_OF_MONTH, today.get(Calendar.DAY_OF_MONTH))
-                return calendar.timeInMillis
+            val calendar = Calendar.getInstance().apply {
+                if (date != null) time = date
             }
+            calendar.timeInMillis
         } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return 0
-    }
-
-    private fun formatMillisToTime(millis: Long): String {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = millis
-        val format = SimpleDateFormat("h:mm a", Locale.getDefault())
-        return format.format(calendar.time)
-    }
-
-    private fun generateActivitiesByBudget(budget: Int, hours: Int): List<ActivityItem> {
-        // Keep your existing implementation
-        val allActivities = listOf(
-            ActivityItem(
-                1,
-                "Coffee at Local Cafe",
-                "Start your day with a freshly brewed coffee and pastry",
-                15,
-                1,
-                R.drawable.ic_sample,
-                cost = 56.0,
-                rating = 4f,
-                location = Location(4.0,3.6)
-            ),
-            ActivityItem(
-                2,
-                "Coffee at Local Cafe",
-                "Start your day with a freshly brewed coffee and pastry",
-                15,
-                1,
-                R.drawable.ic_sample,
-                cost = 56.0,
-                rating = 4f,
-                location = Location(4.0,3.6)
-            ),
-            ActivityItem(
-                1,
-                "Coffee at Local Cafe",
-                "Start your day with a freshly brewed coffee and pastry",
-                15,
-                1,
-                R.drawable.ic_sample,
-                cost = 56.0,
-                rating = 4f,
-                location = Location(4.0,3.6)
-            )
-
-        )
-
-        // Algorithm to select activities based on budget and time
-        val selectedActivities = mutableListOf<ActivityItem>()
-        var remainingBudget = budget
-        var remainingHours = hours.toDouble()
-
-        // Add mandatory activities first (like meals)
-        val breakfast = allActivities.find { it.id == 1L }
-        breakfast?.let {
-            selectedActivities.add(it)
-            remainingBudget -= it.cost.toInt()
-            remainingHours -= it.duration
-        }
-
-        val lunch = allActivities.find { it.id == 3L }
-        lunch?.let {
-            selectedActivities.add(it)
-            remainingBudget -= it.cost.toInt()
-            remainingHours -= it.duration
-        }
-
-        // If budget and time allow, add dinner
-        if (remainingBudget >= 45 && remainingHours >= 2) {
-            val dinner = allActivities.find { it.id == 8L }
-            dinner?.let {
-                selectedActivities.add(it)
-                remainingBudget -= it.cost.toInt()
-                remainingHours -= it.duration
-            }
-        }
-
-        // Add other activities based on remaining budget and time
-        val otherActivities = allActivities.filter { it.id !in listOf(1L, 3L, 8L) }
-            .sortedBy { it.cost }
-
-        for (activity in otherActivities) {
-            if (remainingBudget >= activity.cost && remainingHours >= activity.duration) {
-                selectedActivities.add(activity)
-                remainingBudget -= activity.cost.toInt()
-                remainingHours -= activity.duration
-            }
-
-            // Stop if we've filled the day
-            if (remainingHours < 1) break
-        }
-
-        // Sort activities by a logical order for the day
-        return selectedActivities.sortedBy {
-            when (it.id) {
-                1L -> 0 // Breakfast first
-                3L -> 3 // Lunch in the middle
-                8L -> 6 // Dinner at the end
-                else -> it.id
-            }
+            System.currentTimeMillis()
         }
     }
 
     private fun setupListeners() {
-        backButton.setOnClickListener {
-            // Go back to start
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            startActivity(intent)
+        backButton.setOnClickListener { finish() }
+
+        viewCustomItineraryButton.setOnClickListener {
+            Toast.makeText(this, "Custom itinerary clicked", Toast.LENGTH_SHORT).show()
         }
 
         downloadButton.setOnClickListener {
-            // Mock download functionality
-            Toast.makeText(this, "Itinerary downloaded to your device", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Download feature not implemented", Toast.LENGTH_SHORT).show()
         }
 
         editButton.setOnClickListener {
-            // Go back to first step to edit
-            finish()
+            Toast.makeText(this, "Edit itinerary clicked", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        viewCustomItineraryButton.setOnClickListener {
-            // In a real app, this would navigate to a more detailed view
-            Toast.makeText(this, "Viewing detailed itinerary", Toast.LENGTH_SHORT).show()
-        }
+    private fun generateActivitiesByBudget(budget: Int, hours: Int): List<ActivityItem> {
+        // Dummy implementation - replace with real logic
+        return emptyList()
     }
 }

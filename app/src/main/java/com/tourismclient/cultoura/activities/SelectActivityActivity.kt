@@ -3,29 +3,37 @@ package com.tourismclient.cultoura.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.volley.VolleyError
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.tourismclient.cultoura.R
 import com.tourismclient.cultoura.adapters.ActivitySelectionAdapter
 import com.tourismclient.cultoura.databinding.ActivitySelectActivityBinding
 import com.tourismclient.cultoura.models.ActivityItem
 import com.tourismclient.cultoura.models.ActivitySection
-import com.tourismclient.cultoura.models.Location
+import com.tourismclient.cultoura.models.User
+import com.tourismclient.cultoura.network.ApiUrl
 import com.tourismclient.cultoura.utils.Constants
+import com.tourismclient.cultoura.utils.SharedPreferences
+import com.tourismclient.cultoura.utils.VolleyRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.lang.reflect.Type
 
-class SelectActivityActivity : AppCompatActivity() {
+
+class SelectActivityActivity : BaseActivity() {
 
     private lateinit var activityAdapter: ActivitySelectionAdapter
     private lateinit var binding: ActivitySelectActivityBinding
     private val selectedActivities = mutableMapOf<Long, ActivityItem>()
     private val activitySections = mutableListOf<ActivitySection>()
-
+    private val volleyRequest = VolleyRequest()
     private val activityDetailLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -76,50 +84,45 @@ class SelectActivityActivity : AppCompatActivity() {
         val date = intent.getStringExtra(Constants.DATE) ?: ""
         val startTime = intent.getStringExtra(Constants.START_TIME) ?: ""
         val endTime = intent.getStringExtra(Constants.END_TIME) ?: ""
-        val budget = intent.getStringExtra(Constants.BUDGET) ?: ""
+        val budget = intent.getDoubleExtra(Constants.BUDGET,0.0)
+        val jsonObject = JSONObject()
+        jsonObject.put("PLAN_TYPE",planType)
+        jsonObject.put("date",date)
+        jsonObject.put("startTime",startTime)
+        jsonObject.put("endTime",endTime)
+        jsonObject.put("budget",budget)
+        jsonObject.put("city",SharedPreferences.getVariablesInPreferences(Constants.CITY,this@SelectActivityActivity).replace(" ", "-").lowercase())
+        volleyRequest.makePOSTRequest(
+            ApiUrl.GETACTIVITYOPTIONS,
+            jsonObject,
+            this@SelectActivityActivity,
+            true
+        )
+        volleyRequest.setVolleyRequestListener(object : VolleyRequest.VolleyRequestListener {
+            override fun onDataLoaded(jsonObject: JSONObject?) {
+                if(jsonObject != null) {
+                    val jsonArrayString = jsonObject.getJSONArray("sections").toString()
 
-        // TODO: Replace with actual API call
-        activitySections.addAll(createDummyActivitySections())
-    }
+                    val listType = object : TypeToken<List<ActivitySection>>() {}.type
+                    val parsedList: List<ActivitySection> = Gson().fromJson(jsonArrayString, listType)
 
-    private fun createDummyActivitySections(): List<ActivitySection> {
-        // This is just for demonstration, replace with your actual data loading
-        return listOf(
-            ActivitySection(1L, "Morning Activities", listOf(
-                ActivityItem(101L, "Morning Hike", "Enjoy a refreshing hike with beautiful views", R.drawable.ic_sample,1,4,400.0,4f,
-                    Location(6.0, 5.6)
-                ),ActivityItem(102L, "Morning Hike", "Enjoy a refreshing hike with beautiful views", R.drawable.ic_sample,1,4,400.0,4f,
-                    Location(6.0, 5.6)
-                ),ActivityItem(103L, "Morning Hike", "Enjoy a refreshing hike with beautiful views", R.drawable.ic_sample,1,4,400.0,4f,
-                    Location(6.0, 5.6)
-                )
+                    activitySections.addAll(parsedList)
 
-            )),
-            ActivitySection(2L, "Afternoon Activities", listOf(
-                ActivityItem(201L, "Lunch Cruise", "Dine while enjoying waterfront views", R.drawable.ic_sample,2,4,400.0,4f,
-                    Location(6.0, 5.6),
 
-            ),ActivityItem(202L, "Morning Hike", "Enjoy a refreshing hike with beautiful views", R.drawable.ic_sample,2,4,400.0,4f,
-                    Location(6.0, 5.6)
-                ),ActivityItem(203L, "Morning Hike", "Enjoy a refreshing hike with beautiful views", R.drawable.ic_sample,2,4,400.0,4f,
-                    Location(6.0, 5.6)
-                )
-            )),
-            ActivitySection(3L, "Evening Activities", listOf(
-                ActivityItem(301L, "Sunset View", "Watch the sunset from a scenic spot",  R.drawable.ic_sample,3,4,400.0,4f,
-                    Location(6.0, 5.6)),ActivityItem(302L, "Morning Hike", "Enjoy a refreshing hike with beautiful views", R.drawable.ic_sample,3,4,400.0,4f,
-                    Location(6.0, 5.6)
-                ),ActivityItem(303L, "Morning Hike", "Enjoy a refreshing hike with beautiful views", R.drawable.ic_sample,3,4,400.0,4f,
-                    Location(6.0, 5.6)
-                )
+                }
+            }
 
-            ))
-                )
+            override fun onError(error: VolleyError) {
+                showErrorSnackBar("Error Signing In")
+            }
+        })
+
     }
 
     private fun setupRecyclerView() {
         activityAdapter = ActivitySelectionAdapter(
             activitySections,
+            this@SelectActivityActivity,
             { sectionId, activityId, position ->
                 // Open activity detail screen on click
                 openActivityDetailScreen(sectionId, position)

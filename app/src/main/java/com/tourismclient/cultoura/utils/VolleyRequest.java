@@ -8,6 +8,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.tourismclient.cultoura.BuildConfig;
+import com.tourismclient.cultoura.confidential.AuthTokenFetcher;
 import com.tourismclient.cultoura.network.ApiUrl;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public class VolleyRequest {
         this.listener = listener;
     }
 
-    public void makeGETRequest(String url, final Map<String, String> parameters, final Context context) {
+    public void makeGETRequest(String url, final Map<String, String> parameters, final Context context, boolean userToken) {
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -79,7 +80,7 @@ public class VolleyRequest {
                 }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return getHeader(context);
+                return getHeader(context,userToken);
             }
         };
 
@@ -115,7 +116,7 @@ public class VolleyRequest {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public void makePOSTRequestWithoutHeader(String url, JSONObject params, final Context context) {
+    public void makePOSTRequestWithoutHeader(String url, JSONObject params, final Context context,boolean userToken) {
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
                 new Response.Listener<JSONObject>() {
@@ -149,7 +150,7 @@ public class VolleyRequest {
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return getHeader(context);
+                return getHeader(context,userToken);
             }
         };
 
@@ -159,7 +160,6 @@ public class VolleyRequest {
 
         queue.add(jsonObjectRequest);
     }
-
     public void makePOSTRequest(String url, JSONObject params, final Context context) {
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
@@ -204,9 +204,53 @@ public class VolleyRequest {
 
         queue.add(jsonObjectRequest);
     }
+    public void makePOSTRequest(String url, JSONObject params, final Context context, boolean userToken) {
+        RequestQueue queue = Volley.newRequestQueue(context);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        debugSuccess(url, response.toString(), params);
+                        if (listener != null) {
+                            try {
+                                listener.onDataLoaded(response);
+                            } catch (JSONException e) {
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (params != null) {
+                    debugError(url, error.toString(), params.toString());
+                } else {
+                    debugError(url, error.toString(), null);
+                }
+                if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
+                    Utils.getInstance().logout(context);
+                    Utils.triggerRebirth(context);
+                }
+                if (listener != null)
+                    listener.onError(error);
+
+                // listPopUp.showPopup(context.getResources().getString(R.string.some_error_occured)+"Error : "+error.getLocalizedMessage(), context.getResources().getString(R.string.ok_action), context);
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return getHeader(context,userToken);
+            }
+        };
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        queue.add(jsonObjectRequest);
+    }
 
 
-    public void makePOSTRequest(String url, HashMap<String, String> params, final Context context) {
+    public void makePOSTRequest(String url, HashMap<String, String> params, final Context context, boolean userToken) {
         RequestQueue queue = Volley.newRequestQueue(context);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -251,7 +295,7 @@ public class VolleyRequest {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return getHeader(context);
+                return getHeader(context,userToken);
 
             }
         };
@@ -333,7 +377,7 @@ public class VolleyRequest {
         queue.add(volleyMultipartRequest);
     }
 
-    public void pushNotificationWithoutBody(String sendNotificationTo, String message, Context context, VolleyRequestListener mVolleyRequestListener) {
+    public void pushNotificationWithoutBody(String sendNotificationTo, String message, Context context, VolleyRequestListener mVolleyRequestListener,boolean userToken) {
 
         JSONObject notificationData = new JSONObject();
         try {
@@ -367,7 +411,7 @@ public class VolleyRequest {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
 
-                return getHeader(context);
+                return getHeader(context,userToken);
 
             }
         };
@@ -381,7 +425,7 @@ public class VolleyRequest {
     }
 
 
-    public void getRequestWithOutHeader(String url, final Map<String, String> parameters, final Context context) {
+    public void getRequestWithOutHeader(String url, final Map<String, String> parameters, final Context context, boolean userToken) {
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -403,7 +447,7 @@ public class VolleyRequest {
                 }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return getHeader(context);
+                return getHeader(context,userToken);
 
             }
         };
@@ -411,11 +455,19 @@ public class VolleyRequest {
         queue.add(jsonObjectRequest);
     }
 
-    private Map<String, String> getHeader(Context context) {
-        String token = SharedPreferences.getVariablesInPreferences(Constants.TOKEN, context);
+    private Map<String, String> getHeader(Context context, boolean userToken) {
+        String token = userToken ? SharedPreferences.getVariablesInPreferences(Constants.USER_TOKEN, context) : SharedPreferences.getVariablesInPreferences(Constants.TOKEN, context);
         Map<String, String> headers = new HashMap<>();
         if (!token.isEmpty()){
             headers.put("Authorization", "Bearer " + token);
+        }
+        return headers;
+    }
+    private Map<String, String> getHeader(Context context) {
+        String token = new AuthTokenFetcher().getToken();
+        Map<String, String> headers = new HashMap<>();
+        if (!token.isEmpty()){
+            headers.put("Authorization", "Basic " + token);
         }
         return headers;
     }

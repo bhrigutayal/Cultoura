@@ -19,7 +19,7 @@ class BudgetActivity : AppCompatActivity() {
 
     private val MIN_BUDGET = 0
     private val MAX_BUDGET = 1000
-    private val DEFAULT_BUDGET = 150
+    private val DEFAULT_BUDGET = 150.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ class BudgetActivity : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
                     binding.budgetEditText.setText(progress.toString())
-                    updateBudgetSuggestion(progress)
+                    updateBudgetSuggestion(progress.toDouble())
                 }
             }
 
@@ -58,7 +58,7 @@ class BudgetActivity : AppCompatActivity() {
                         val budget = budgetInput.toInt()
                         if (budget in MIN_BUDGET..MAX_BUDGET) {
                             binding.budgetSeekBar.progress = budget
-                            updateBudgetSuggestion(budget)
+                            updateBudgetSuggestion(budget.toDouble())
                         }
                     } catch (e: NumberFormatException) {
                         // Handle invalid input
@@ -72,16 +72,16 @@ class BudgetActivity : AppCompatActivity() {
         }
 
         binding.createItineraryButton.setOnClickListener {
-            val budget = binding.budgetEditText.text.toString().toIntOrNull() ?: DEFAULT_BUDGET
+            val budget = binding.budgetEditText.text.toString().toDoubleOrNull() ?: DEFAULT_BUDGET
             proceedToItinerary(budget)
         }
     }
 
-    private fun updateBudgetSuggestion(budget: Int) {
-        binding.budgetSuggestionTextView.text = "We'll suggest activities that fit within your budget of $${budget}."
+    private fun updateBudgetSuggestion(budget: Double) {
+        binding.budgetSuggestionTextView.text = "We'll suggest activities that fit within your budget of ₹${budget}."
     }
 
-    private fun proceedToItinerary(budget: Int) {
+    private fun proceedToItinerary(budget: Double) {
         // Get data from previous steps
         val planType = intent.getStringExtra(Constants.PLAN_TYPE) ?: ""
         val date = intent.getStringExtra(Constants.DATE) ?: ""

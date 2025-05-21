@@ -8,4 +8,5 @@ object Constants {
     const val BUDGET = "budget"
     const val TOKEN = "token"
     const val USER_TOKEN = "user_token"
+    const val CITY = "city"
 }

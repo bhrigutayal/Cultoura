@@ -62,6 +62,8 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("com.github.bumptech.glide:glide:4.11.0")
     // AndroidX Lifecycle ViewModel KTX (for viewModelScope)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation (libs.material.v160)

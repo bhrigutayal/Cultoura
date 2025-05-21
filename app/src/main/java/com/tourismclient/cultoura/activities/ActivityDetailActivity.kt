@@ -63,7 +63,8 @@ class ActivityDetailActivity : AppCompatActivity() {
     private fun setupViewPager() {
         detailAdapter = ActivityDetailPagerAdapter(
             activities,
-            selectedActivityId
+            selectedActivityId,
+            this@ActivityDetailActivity
         ) { activity ->
             // Handle activity selection
             val resultIntent = Intent().apply {

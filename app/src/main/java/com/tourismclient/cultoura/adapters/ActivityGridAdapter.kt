@@ -1,11 +1,13 @@
 package com.tourismclient.cultoura.adapters
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import com.tourismclient.cultoura.R
 import com.tourismclient.cultoura.models.ActivityItem
@@ -13,6 +15,7 @@ import com.tourismclient.cultoura.models.ActivityItem
 class ActivityGridAdapter(
     private val activities: List<ActivityItem>,
     private val selectedActivityId: Long?,
+    private val context : Activity,
     private val onActivityClicked: (ActivityItem, Int) -> Unit,
     private val onActivitySelected: (ActivityItem) -> Unit
 ) : RecyclerView.Adapter<ActivityGridAdapter.GridItemViewHolder>() {
@@ -38,7 +41,12 @@ class ActivityGridAdapter(
 
         fun bind(activity: ActivityItem, isSelected: Boolean, position: Int) {
             activityName.text = activity.title
-            activityThumbnail.setImageResource(activity.imageUrl)
+            Glide
+                .with(context)
+                .load(activity.imageUrl)
+                .centerCrop()
+                .placeholder(R.drawable.ic_sample)
+                .into(activityThumbnail)
 
             // Visual indication of selection
             if (isSelected) {

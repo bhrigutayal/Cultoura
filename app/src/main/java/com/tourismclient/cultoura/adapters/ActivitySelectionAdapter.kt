@@ -1,5 +1,6 @@
 package com.tourismclient.cultoura.adapters
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import com.tourismclient.cultoura.models.ActivitySection
 
 class ActivitySelectionAdapter(
     private val sections: List<ActivitySection>,
+    private val context : Activity,
     private val onActivityClicked: (sectionId: Long, activityId: Long, position: Int) -> Unit,
     private val onActivitySelected: (sectionId: Long, activity: ActivityItem) -> Unit
 ) : RecyclerView.Adapter<ActivitySelectionAdapter.SectionViewHolder>() {
@@ -52,6 +54,7 @@ class ActivitySelectionAdapter(
             val activityAdapter = ActivityGridAdapter(
                 section.activities,
                 selectedActivityId,
+                context,
                 { activity, position ->
                     // Handle click to show full-screen detail
                     onActivityClicked(section.id, activity.id, position)

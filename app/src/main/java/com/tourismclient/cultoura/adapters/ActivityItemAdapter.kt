@@ -1,5 +1,6 @@
 package com.tourismclient.cultoura.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import com.tourismclient.cultoura.R
 import com.tourismclient.cultoura.models.ActivityItem
@@ -16,6 +18,7 @@ import com.tourismclient.cultoura.models.ActivityItem
 class ActivityItemAdapter(
     private val activities: List<ActivityItem>,
     private val selectedActivityId: Long?,
+    private val context : Activity,
     private val onActivityClick: (ActivityItem) -> Unit
 ) : RecyclerView.Adapter<ActivityItemAdapter.ActivityViewHolder>() {
 
@@ -43,7 +46,12 @@ class ActivityItemAdapter(
         fun bind(activity: ActivityItem, isSelected: Boolean) {
             activityTitle.text = activity.title
             activityDescription.text = activity.description
-            activityImage.setImageResource(activity.imageUrl)
+            Glide
+                .with(context)
+                .load(activity.imageUrl)
+                .centerCrop()
+                .placeholder(R.drawable.ic_sample)
+                .into(activityImage)
 
             // Visual indication of selection
             // Replace CardView with MaterialCardView in your layout XML file

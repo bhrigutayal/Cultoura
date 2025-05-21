@@ -78,7 +78,8 @@ class SignUpActivity : BaseActivity() {
             volleyRequest.makePOSTRequest(
                 ApiUrl.SIGNUP,
                 jsonObject,
-                this@SignUpActivity
+                this@SignUpActivity,
+                false
             )
             volleyRequest.setVolleyRequestListener(object : VolleyRequest.VolleyRequestListener {
                 override fun onDataLoaded(jsonObject: JSONObject) {

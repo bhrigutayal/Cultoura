@@ -7,23 +7,31 @@ data class ActivityItem(
     val id: Long,
     val title: String,
     val description: String,
-    val imageUrl: Int,
+    val imageUrl: String,
     val sectionId: Int,
-    val duration: Int, 
+    val startHour : String,
+    val endHour : String,
+    val city : String,
+    val date : String,
     val cost: Double,
     val rating: Float,
-    val location: Location? = null
+    val type : String,
+    val location: String
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
         parcel.readString()!!,
         parcel.readString()!!,
+        parcel.readString()!!,
         parcel.readInt(),
-        parcel.readInt(),
-        parcel.readInt(),
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readString()!!,
         parcel.readDouble(),
         parcel.readFloat(),
-        parcel.readParcelable(Location::class.java.classLoader)
+        parcel.readString()!!,
+        parcel.readString()!!
     ) {
     }
 
@@ -35,13 +43,18 @@ data class ActivityItem(
         dest.writeLong(id)
         dest.writeString(title)
         dest.writeString(description)
-        dest.writeInt(imageUrl)
+        dest.writeString(imageUrl)
         dest.writeInt(sectionId)
-        dest.writeInt(duration)
+        dest.writeString(startHour)
+        dest.writeString(endHour)
+        dest.writeString(city)
+        dest.writeString(date)
         dest.writeDouble(cost)
         dest.writeFloat(rating)
-        dest.writeParcelable(location, flags)
+        dest.writeString(type)
+        dest.writeString(location)
     }
+
 
     companion object CREATOR : Parcelable.Creator<ActivityItem> {
         override fun createFromParcel(parcel: Parcel): ActivityItem {

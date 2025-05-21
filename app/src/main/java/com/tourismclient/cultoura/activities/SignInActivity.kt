@@ -79,7 +79,8 @@ class SignInActivity : BaseActivity() {
             volleyRequest.makePOSTRequest(
                 ApiUrl.LOGIN,
                 jsonObject,
-                this@SignInActivity
+                this@SignInActivity,
+                false
             )
             volleyRequest.setVolleyRequestListener(object : VolleyRequest.VolleyRequestListener {
                 override fun onDataLoaded(jsonObject: JSONObject) {
