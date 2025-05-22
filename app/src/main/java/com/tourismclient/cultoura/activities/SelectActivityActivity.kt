@@ -60,7 +60,6 @@ class SelectActivityActivity : BaseActivity() {
 
         CoroutineScope(Dispatchers.Main).launch {
             loadActivitySections()
-            setupRecyclerView()
         }
         setupListeners()
     }
@@ -107,7 +106,7 @@ class SelectActivityActivity : BaseActivity() {
                     val parsedList: List<ActivitySection> = Gson().fromJson(jsonArrayString, listType)
 
                     activitySections.addAll(parsedList)
-
+                    setupRecyclerView()
 
                 }
             }

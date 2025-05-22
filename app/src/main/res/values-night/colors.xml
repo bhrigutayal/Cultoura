@@ -1,0 +1,10 @@
+<resources>
+<color name="primary">#D0BCFF</color>
+    <color name="onPrimary">#000000</color>
+    <color name="secondary">#CCC2DC</color>
+    <color name="onSecondary">#000000</color>
+    <color name="surface">#121212</color>
+    <color name="onSurface">#FFFFFF</color>
+    <color name="button_text_color">#FFFFFF</color>
+
+</resources>
